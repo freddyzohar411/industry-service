@@ -8,6 +8,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 /**
  * @author Koh He Xiang
  * This class is used to implement the IndustryService interface and perform CRUD operations
@@ -34,6 +38,42 @@ public class IndustryServiceImpl implements IndustryService {
         );
         log.info("Industry found : Service");
         return toIndustryResponseDTO(industry);
+    }
+
+    /**
+     * This method is used to get all industries
+     * @return
+     */
+    @Override
+    public List<IndustryResponseDTO> getAllIndustries() {
+        List<IndustryEntity> industries = industryRepository.findAll();
+        return industries.stream().map(this::toIndustryResponseDTO).toList();
+    }
+
+    /**
+     * This method is used to get all parent industries
+     * @return List<IndustryResponseDTO>
+     */
+    @Override
+    public List<IndustryResponseDTO> getAllParentIndustries() {
+        List<IndustryEntity> industries = industryRepository.findAllParentIndustries();
+        return industries.stream().map(this::toIndustryResponseDTO).toList();
+    }
+
+    /**
+     * This method is used to get all sub industries based on parent industry id
+     * @return
+     */
+    @Override
+    public List<IndustryResponseDTO> getAllSubIndustries(int industryId) {
+        Optional<IndustryEntity> parentIndustry = industryRepository.findById(industryId);
+        if (parentIndustry.isPresent()) {
+            List<IndustryEntity> industries = industryRepository.findAllSubIndustriesByParentIndustry(parentIndustry.get());
+            return industries.stream().map(this::toIndustryResponseDTO).toList();
+        } else {
+            List<IndustryResponseDTO> industries= new ArrayList<>();
+            return industries;
+        }
     }
 
     /**
