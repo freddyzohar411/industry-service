@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
+@RequestMapping("/api/industries")
 public class IndustryController {
 
     private final Logger log = LoggerFactory.getLogger(IndustryController.class);
@@ -37,7 +38,7 @@ public class IndustryController {
      * @param name
      * @return Httpresponse
      */
-    @GetMapping("/industries")
+    @GetMapping("")
     public ResponseEntity<Object> getIndustryByName(@Valid @RequestParam String name) {
         log.info("Get an industry by name : Controller ");
         IndustryResponseDTO industry = industryService.getIndustryByName(name);
@@ -48,19 +49,19 @@ public class IndustryController {
      * Get all industries
      * @return Httpresponse
      */
-    @GetMapping("/industries/all")
+    @GetMapping("/all")
     public ResponseEntity<Object> getAllIndustries() {
         log.info("Get all industries : Controller ");
         return ResponseUtil.generateSuccessResponse(industryService.getAllIndustries(), HttpStatus.OK, messageSource.getMessage(MessageConstants.MESSAGE_SUCCESS, null, LocaleContextHolder.getLocale()));
     }
 
-    @GetMapping("/industries/parent")
+    @GetMapping("/parent")
     public ResponseEntity<Object> getAllParentIndustries() {
         log.info("Get all parent industries : Controller ");
         return ResponseUtil.generateSuccessResponse(industryService.getAllParentIndustries(), HttpStatus.OK, messageSource.getMessage(MessageConstants.MESSAGE_SUCCESS, null, LocaleContextHolder.getLocale()));
     }
 
-    @GetMapping("/industries/{industryId}/sub")
+    @GetMapping("/{industryId}/sub")
     public ResponseEntity<Object> getAllSubIndustries(@PathVariable int industryId) {
         log.info("Get all sub industries : Controller ");
         return ResponseUtil.generateSuccessResponse(industryService.getAllSubIndustries(industryId), HttpStatus.OK, messageSource.getMessage(MessageConstants.MESSAGE_SUCCESS, null, LocaleContextHolder.getLocale()));
